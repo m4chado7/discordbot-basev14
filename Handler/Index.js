@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { Discord, Events } = require('discord.js');
 require("colors");
+const settings = require('../Config');
 
 function getFilesRecursively(dir) {
   if (!fs.existsSync(dir)) return [];
@@ -51,9 +52,9 @@ module.exports = (client) => {
     try {
       const commandsData = [...client.slashCommands.values()].map((cmd) => cmd.data.toJSON());
 
-      if (process.env.GUILD_ID) {
+      if (settings.bot.guildid) {
         // Registra só num servidor específico -> atualiza na hora, ótimo pra dev.
-        const guild = await client.guilds.fetch(process.env.GUILD_ID);
+        const guild = await client.guilds.fetch(settings.bot.guildid);
         await guild.commands.set(commandsData);
       } else {
         // Sem GUILD_ID -> registra globalmente (pode levar até 1h pra propagar).
